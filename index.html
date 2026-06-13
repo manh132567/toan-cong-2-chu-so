@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luyện Cộng Số</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>🌟 Luyện Cộng Số</h1>
+      <p class="subtitle">Chọn đáp án đúng nhé!</p>
+    </header>
+
+    <div class="top-bar">
+      <div class="mode-selector" role="group" aria-label="Chọn loại bài toán">
+        <button type="button" class="mode-btn active" data-mode="1">1 chữ số</button>
+        <button type="button" class="mode-btn" data-mode="2">2 chữ số</button>
+      </div>
+
+      <div class="score-board">
+        <div class="score-item">
+          <span class="label">Đúng</span>
+          <span id="correct-count" class="value correct">0</span>
+        </div>
+        <div class="score-item">
+          <span class="label">Sai</span>
+          <span id="wrong-count" class="value wrong">0</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="quiz-card">
+      <div id="question" class="question">4 + 7 = ?</div>
+      <div id="feedback" class="feedback" aria-live="polite"></div>
+      <div id="options" class="options"></div>
+    </main>
+
+    <button id="next-btn" class="next-btn hidden" type="button">Câu tiếp theo ➡️</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
