@@ -13,6 +13,25 @@ let currentAnswer = 0;
 let answered = false;
 let difficultyLevel = 1;
 
+const arrCorrect = [
+  "Giỏi quá!",
+  "ối dồi ôi! Quá là giỏi luôn",
+  "Ghê đấy",
+  "Kinh rứa chài",
+  "Đúng đúng đúng",
+  "Rất là tốt!",
+  "Phờ Rồ lun!",
+  "Quá đẳng cấp",
+  "Cứ thế tiếp tục nhé!",
+  "10 điểm",
+  "Con ai mà giỏi thế!",
+];
+
+//
+let correctPool = [];
+let correctIndex = 0;
+let lastCorrectMessage = null;
+
 // function speak(text) {
 //   if (!("speechSynthesis" in window)) return;
 
@@ -70,14 +89,12 @@ function speak(text, isWrong = false) {
 
   // Ưu tiên giọng nữ tiếng Việt
   const femaleVoice =
-    voices.find(v =>
-      v.lang.includes("vi") &&
-      (
-        v.name.toLowerCase().includes("female") ||
-        v.name.toLowerCase().includes("female voice")
-      )
-    ) ||
-    voices.find(v => v.lang.includes("vi"));
+    voices.find(
+      (v) =>
+        v.lang.includes("vi") &&
+        (v.name.toLowerCase().includes("female") ||
+          v.name.toLowerCase().includes("female voice")),
+    ) || voices.find((v) => v.lang.includes("vi"));
 
   if (femaleVoice) {
     utterance.voice = femaleVoice;
@@ -216,10 +233,7 @@ function renderQuestion() {
 
   nextBtn.classList.add("hidden");
 
-  const choices = shuffle([
-    answer,
-    ...generateWrongAnswers(answer),
-  ]);
+  const choices = shuffle([answer, ...generateWrongAnswers(answer)]);
 
   optionsEl.innerHTML = "";
 
@@ -236,6 +250,25 @@ function renderQuestion() {
 
     optionsEl.appendChild(button);
   });
+}
+
+function getNextCorrectMessage() {
+  if (correctPool.length === 0 || correctIndex >= correctPool.length) {
+    do {
+      correctPool = shuffle(arrCorrect);
+    } while (
+      arrCorrect.length > 1 &&
+      correctPool[0] === lastCorrectMessage
+    );
+
+    correctIndex = 0;
+  }
+
+  const message = correctPool[correctIndex++];
+
+  lastCorrectMessage = message;
+
+  return message;
 }
 
 function handleAnswer(selected, button) {
@@ -263,8 +296,9 @@ function handleAnswer(selected, button) {
 
     button.classList.add("selected-correct");
 
-    const arrCorrect = ["Giỏi quá!", "Chính xác!", "Đúng rồi!", "Tuyệt vời!", "Quá tốt!", "Rất tốt!", "Phờ Rồ lun!", "Quá đẳng cấp", "Cứ thế tiếp tục nhé!", "10 điểm", "Con ai mà giỏi thế!"];
-    const randomCorrect = arrCorrect[Math.floor(Math.random() * arrCorrect.length)];
+    // Lấy message tiếp theo
+    const randomCorrect = getNextCorrectMessage();
+
     feedbackEl.textContent = "🎉 " + randomCorrect;
     feedbackEl.className = "feedback correct";
     speak(randomCorrect);
